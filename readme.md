@@ -1,0 +1,82 @@
+# Kubernetes Node Setup & Installation
+
+This ansible playbook is to setup RedHat and Debian family nodes to run kubernetes with cri-o. The playbook automates the installation of kubernetes components and the cluster initialization:
+
+- kubeadm
+- kubelet
+- kubectl
+- cri-o
+
+The play book will run the `kubeadm init` command on the control plane node and run the `kubeadm join` command on the worker nodes to join them to the cluster.
+
+After that, all you have to do is gain access to the cluster by exporting the `/etc/kubernetes/admin.conf` file out of the control plane node.
+
+## How to use it
+
+You just need to have ansible installed and ssh access to the nodes.
+Edit the [`inventory.yaml`](inventory.yaml) file to configure hosts and variables.
+
+To run the ansible playbook, execute the following command:
+```bash
+ansible-playbook main.yaml -i inventory.yaml -K
+```
+
+## Distributions
+
+Below are the distributions that I have run it on and has confirmed to work:
+
+- AlmaLinux 10 
+- CentOS Stream 10
+- Debian Bookworm
+- Ubuntu 24.04
+
+## What will the playbook do
+
+- Clear prerequisites
+    - configure NTP with chrony
+    - disable firewall (because it interferes with overlay network tunnels)
+    - disable SELinux on distributions that use it (still haven't figured out how to use)
+    - disable swap and remove it from /etc/fstab
+    - load required kernel modules and make them persistent
+    - configure required sysctl conf and make them persistent
+- Add CRI-O and K8S repositories
+- Install CRI-O and K8S components
+- Exclude CRI-O and K8S components from updates to keep them from being updated unintentionally.
+- Initializes the kubernetes cluster with kubeadm
+    - generates kubeadm join tokens and commands
+    - run join commands on worker nodes
+
+> The playbook is designed for initial installs. It can't handle upgrades since they aren't tested yet. What it means is that changing the ***crio_ver*** and ***k8s_ver*** variables won't upgrade the cluster. There will be separate playbook for upgrades later.
+
+## Variables Definition
+
+| Variable | Description | Value | Type|
+|---|---|---|---|
+| ntp_server | Address of the ntp server that you intend to use | IP address or hostname | string |
+| k8s_ver | Kubernetes major release version | v1.3x | string |
+| crio_ver | CRI-O major release version | v1.3x | string |
+| kernel_modules_to_load | Defines which kernel modules to load | list of kernel module names | list |
+| sysctl_configurations | Defines which sysctl configurations to apply | dictionary of sysctl conf key value pairs | dict |
+|enable_iscsi|Whether to install iscsi or not | true or false | boolean|
+|kubeadm_image_repository | kubeadm option for custom image repository | example.registry.com | string|
+|kubeadm_pod_network_cidr | kubeadm option for pod network cidr | X.X.X.X/XX (subnet/mask) | string |
+|kubeadm_service_network_cidr | kubeadm option for service network cidr | X.X.X.X/XX (subnet/mask) | string |
+|kubeadm_control_plane_endpoint | kubeadm option for control plane endpoint | IP or domain name | string |
+|kubeadm_service_dns_domain | kubeadm option for sevice dns domain | domain name | string |
+
+The kubeadm options are optional. Default options will be used if they are not defined in the [`inventory.yaml`](inventory.yaml) file.
+
+## Somethings to keep in mind
+
+This playbook works the best with the lastest Kubernetes, CRI-O and nodes' Operating Systems. Older versions of CRI-O have used the pause image with tag `v3.8`  by default which is not aligned with the one kubelet is using so it had to be changed manually in the crio configurations. This issue nolonger exists in v1.33+ so there's no task to add the latest pause image to the crio config in the playbook.
+
+To check the latest stable releases of Kubernetes run:
+
+```
+curl https://cdn.dl.k8s.io/release/stable.txt
+```
+CRI-O version is mostly inline with the Kubernetes version but just to be sure, visit their release page to check out:
+
+[`https://github.com/cri-o/cri-o/releases`](https://github.com/cri-o/cri-o/releases)
+
+

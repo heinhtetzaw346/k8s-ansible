@@ -1,0 +1,4 @@
+- import_playbook: playbooks/01_prerequisites.yaml
+- import_playbook: playbooks/02_kernel_modules_config.yaml
+- import_playbook: playbooks/03_cluster_installation.yaml
+- import_playbook: playbooks/04_cluster_initialization.yaml
