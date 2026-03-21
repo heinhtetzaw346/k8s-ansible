@@ -1,0 +1,2 @@
+chrony_pkg_name: "chrony"
+chrony_service_name: "chronyd"

@@ -1,0 +1,7 @@
+- name: Restart chrony
+  become: true
+  ansible.builtin.service:
+    name: "{{ chrony_service_name }}"
+    state: restarted
+  listen: "Restart chrony"
+

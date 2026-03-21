@@ -1,0 +1,4 @@
+---
+#handlers file for prerequisites
+- name: Include chrony handlers
+  ansible.builtin.import_tasks: "chrony.yml"

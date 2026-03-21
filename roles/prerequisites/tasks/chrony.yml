@@ -1,0 +1,22 @@
+- name: Install and configure chrony
+  become: true
+  block:
+    - name: Install chrony
+      ansible.builtin.package:
+        name: "{{ chrony_pkg_name }}"
+        state: present
+
+    - name: Start and enable chrony server
+      ansible.builtin.service:
+        name: "{{ chrony_service_name }}"
+        state: started
+        enabled: true
+
+    - name: Configure chrony server
+      ansible.builtin.template:
+        src: chrony.conf.j2
+        dest: "{{ chrony_conf_path }}"
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Restart chrony

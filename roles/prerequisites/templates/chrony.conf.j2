@@ -1,0 +1,10 @@
+### Managed by k8s-ansible ###
+
+pool {{ ntp_server }} iburst
+
+makestep 1.0 3
+maxupdateskew 10.0
+driftfile /var/lib/chrony/drift
+rtcsync
+
+logdir /var/log/chrony
