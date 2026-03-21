@@ -9,3 +9,6 @@
 
 - name: Include chrony
   ansible.builtin.import_tasks: chrony.yml
+
+- name: Include timezone
+  ansible.builtin.import_tasks: timezone.yml
