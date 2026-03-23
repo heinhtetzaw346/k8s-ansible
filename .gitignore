@@ -1,3 +1,6 @@
 test-inventory.yml
 test-vars.yml
 test-playbook.yml
+test-inventory.yaml
+test-vars.yaml
+test-playbook.yaml
