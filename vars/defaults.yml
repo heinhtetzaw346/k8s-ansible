@@ -1,0 +1,3 @@
+ntp_server: "asia.pool.ntp.org"
+dns_server: "192.168.180.53"
+timezone: "Asia/Yangon"
