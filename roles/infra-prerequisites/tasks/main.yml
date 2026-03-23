@@ -7,8 +7,12 @@
 - name: Load OS-family variables
   ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
 
+- name: Include dns
+  ansible.builtin.import_tasks: dns.yml
+
 - name: Include chrony
   ansible.builtin.import_tasks: chrony.yml
 
 - name: Include timezone
   ansible.builtin.import_tasks: timezone.yml
+

@@ -2,3 +2,6 @@
 #handlers file for prerequisites
 - name: Include chrony handlers
   ansible.builtin.import_tasks: "chrony.yml"
+
+- name: Include NetworkManager handlers
+  ansible.builtin.import_tasks: "networkmanager.yml"

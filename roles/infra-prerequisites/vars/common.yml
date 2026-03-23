@@ -1,2 +1,3 @@
 chrony_pkg_name: "chrony"
 chrony_service_name: "chronyd"
+resolv_conf_path: "/etc/resolv.conf"

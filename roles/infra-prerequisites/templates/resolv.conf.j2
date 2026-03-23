@@ -1,0 +1,6 @@
+### Managed by k8s-ansible ###
+
+search {{ search_domain }}
+{% for item in dns_servers %}
+nameserver {{ item }}
+{% endfor %}

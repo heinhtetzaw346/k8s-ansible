@@ -1,0 +1,10 @@
+- name: Prevent NetworkManager from managing resolv conf
+  ansible.builtin.copy:
+    dest: /etc/NetworkManager/conf.d/90-dns-none.conf
+    content: |
+      [main]
+      dns=none
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart NetworkManager

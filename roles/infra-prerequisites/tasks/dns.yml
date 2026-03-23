@@ -1,0 +1,30 @@
+- name: Setup static DNS
+  become: true
+  block:
+    - name: Disable dynamic DNS for specific OS
+      ansible.builtin.include_tasks: "{{ item }}"
+      with_first_found:
+        - files: 
+            - "dns-{{ ansible_distribution }}.yml"
+            - "dns-{{ ansible_os_family }}.yml"
+          skip: true
+
+    - name: Check if resolv conf is symlink
+      ansible.builtin.stat:
+        path: "{{ resolv_conf_path }}"
+      register: resolv
+
+    - name: Remove resolv conf file symlink
+      when: resolv.stat.islnk is defined and resolv.stat.islnk == True
+      ansible.builtin.file:
+        path: "{{ resolv_conf_path }}"
+        state: absent
+
+    - name: Configure static DNS
+      ansible.builtin.template:
+        src: resolv.conf.j2
+        dest: "{{ resolv_conf_path }}"
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
