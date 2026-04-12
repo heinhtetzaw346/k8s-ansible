@@ -1,2 +1,9 @@
 ---
 # defaults file for prerequisites
+ntp_server: "asia.pool.ntp.org"
+timezone: "UTC"
+dns_servers:
+  - "1.1.1.1"
+  - "8.8.8.8"
+  - "9.9.9.9"
+search_domain: "local"
