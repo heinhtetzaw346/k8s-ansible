@@ -1,0 +1,6 @@
+- name: Disable apparmor
+  become: true
+  ansible.builtin.service:
+    name: apparmor
+    state: stopped
+    enabled: false

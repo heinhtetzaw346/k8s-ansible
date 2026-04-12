@@ -1,2 +1,4 @@
 ---
 # defaults file for sys-prerequisites
+securty_enabled: true
+firewall_enabled: true

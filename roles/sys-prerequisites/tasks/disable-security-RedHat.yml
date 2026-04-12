@@ -1,0 +1,12 @@
+- name: Disable selinux
+  become: true
+  block:
+    - name: Set selinux mode to permissive
+      ansible.builtin.lineinfile:
+        path: /etc/selinux/config
+        search_string: "SELINUX=enforcing"
+        line: "SELINUX=disabled"
+    - name: Disable Selinux 
+      ansible.posix.selinux:
+        state: disabled
+

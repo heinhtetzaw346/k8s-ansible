@@ -1,0 +1,22 @@
+- name: Disable firewall
+  become: true
+  block:
+    - name: Check if firewalld exists
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Disable firewalld
+      when: "'firewalld' in ansible_facts.packages"
+      ansible.builtin.service:
+        name: firewalld
+        state: stopped
+        enabled: false
+
+    - name: Check if ufw exists
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Disable ufw
+      when: "'ufw' in ansible_facts.packages"
+      community.general.ufw:
+        state: disabled
