@@ -1,5 +1,5 @@
 ---
-#handlers file for prerequisites
+#handlers file for node_preflight
 - name: Include chrony handlers
   ansible.builtin.import_tasks: "chrony.yml"
 

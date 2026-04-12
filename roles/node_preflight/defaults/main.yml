@@ -1,5 +1,5 @@
 ---
-# defaults file for prerequisites
+# defaults file for node_preflight
 ntp_server: "asia.pool.ntp.org"
 timezone: "UTC"
 dns_servers:
@@ -7,3 +7,6 @@ dns_servers:
   - "8.8.8.8"
   - "9.9.9.9"
 search_domain: "local"
+securty_enabled: true
+firewall_enabled: true
+swap_enabled: false

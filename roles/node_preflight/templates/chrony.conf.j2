@@ -3,7 +3,7 @@
 pool {{ ntp_server }} iburst
 
 makestep 1.0 3
-maxupdateskew 10.0
+maxupdateskew 0.5
 driftfile /var/lib/chrony/drift
 rtcsync
 
