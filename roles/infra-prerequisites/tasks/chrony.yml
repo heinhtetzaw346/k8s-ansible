@@ -5,6 +5,7 @@
       ansible.builtin.package:
         name: "{{ chrony_pkg_name }}"
         state: present
+        update_cache: true
 
     - name: Start and enable chrony server
       ansible.builtin.service:
