@@ -1,5 +1,6 @@
 - name: Configure kernel modules
   become: true
+  tags: [ node_network, kernel ]
   block:
     - name: Load Kernel Modules persistently
       community.general.modprobe:

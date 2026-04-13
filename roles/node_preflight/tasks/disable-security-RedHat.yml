@@ -1,5 +1,6 @@
 - name: Disable selinux
   become: true
+  tags: [ node_preflight, security ]
   block:
     - name: Set selinux mode to permissive
       ansible.builtin.lineinfile:

@@ -15,9 +15,7 @@
   tags: [ always ]
 
 - name: Include Kernel Modules
-  ansible.builtin.include_tasks: "kernel_modules.yml"
-  tags: [ node_network, kernel ]
+  ansible.builtin.import_tasks: "kernel_modules.yml"
 
-- name: Include Kernel Modules
-  ansible.builtin.include_tasks: "sysctl_config.yml"
-  tags: [ node_network, sysctl ]
+- name: Include Sysctl Configs
+  ansible.builtin.import_tasks: "sysctl_config.yml"

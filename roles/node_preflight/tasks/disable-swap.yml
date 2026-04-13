@@ -1,5 +1,6 @@
 - name: Disable swap
   become: true
+  tags: [ node_preflight, swap ]
   block:
     - name: Run swapoff
       when: ansible_swaptotal_mb > 0

@@ -1,5 +1,6 @@
 - name: Set timezone
   become: true
+  tags: [ node_preflight, timezone ]
   block:
     - name: Ensure tzdata
       ansible.builtin.package:

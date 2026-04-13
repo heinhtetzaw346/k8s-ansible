@@ -1,5 +1,6 @@
 - name: Install NFS
   become: true
+  tags: [ node_storage, nfs ]
   block:
     - name: Install nfs client
       ansible.builtin.package:

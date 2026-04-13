@@ -1,5 +1,6 @@
 - name: Install and configure chrony
   become: true
+  tags: [ node_preflight, ntp ]
   block:
     - name: Install chrony
       ansible.builtin.package:

@@ -1,5 +1,6 @@
 - name: Setup static DNS
   become: true
+  tags: [ node_preflight, dns ]
   block:
     - name: Disable dynamic DNS for specific OS
       ansible.builtin.include_tasks: "{{ item }}"
