@@ -13,3 +13,4 @@
         name: "{{ iscsi_service_name }}"
         state: started
         enabled: true
+        pattern: /usr/sbin/iscsid
