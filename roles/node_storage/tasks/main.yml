@@ -1,0 +1,23 @@
+---
+# tasks file for node_storage
+
+- name: Load common variables
+  ansible.builtin.include_vars: "common.yml"
+  tags: [ always ]
+
+- name: Load OS-family variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+      skip: true
+  tags: [ always ]
+
+- name: Include ISCSI
+  ansible.builtin.include_tasks: "iscsi.yml"
+  tags: [ node_storage, iscsi ]
+
+- name: Include NFS
+  ansible.builtin.include_tasks: "nfs.yml"
+  tags: [ node_storage, nfs ]

@@ -1,0 +1,14 @@
+- name: Install ISCSI
+  become: true
+  block:
+    - name: Install iscsi initiator
+      ansible.builtin.package:
+        name: "{{ iscsi_pkg_name }}"
+        state: present
+        update_cache: true
+
+    - name: Start and enable iscsid
+      ansible.builtin.service:
+        name: "{{ iscsi_service_name }}"
+        state: started
+        enabled: true
