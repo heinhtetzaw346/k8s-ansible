@@ -1,6 +1,6 @@
 - name: Disable apparmor
   become: true
-  tags: [ node_preflight, security ]
+  tags: [ node-preflight, security ]
   ansible.builtin.service:
     name: apparmor
     state: stopped

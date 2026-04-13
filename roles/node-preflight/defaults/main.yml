@@ -1,5 +1,5 @@
 ---
-# defaults file for node_preflight
+# defaults file for node-preflight
 ntp_server: "asia.pool.ntp.org"
 timezone: "UTC"
 dns_servers:

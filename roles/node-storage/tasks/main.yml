@@ -1,5 +1,5 @@
 ---
-# tasks file for node_storage
+# tasks file for node-storage
 
 - name: Load common variables
   ansible.builtin.include_vars: "common.yml"

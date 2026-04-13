@@ -1,5 +1,5 @@
 ---
-# tasks file for node_preflight
+# tasks file for node-preflight
 
 - name: Load common variables
   ansible.builtin.include_vars: "common.yml"

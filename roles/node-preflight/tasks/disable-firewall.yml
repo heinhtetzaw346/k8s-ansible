@@ -1,6 +1,6 @@
 - name: Disable firewall
   become: true
-  tags: [ node_preflight, firewall ]
+  tags: [ node-preflight, firewall ]
   block:
     - name: Check if firewalld exists
       ansible.builtin.package_facts:

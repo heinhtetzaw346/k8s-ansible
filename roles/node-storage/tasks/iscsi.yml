@@ -1,6 +1,6 @@
 - name: Install ISCSI
   become: true
-  tags: [ node_storage, iscsi ]
+  tags: [ node-storage, iscsi ]
   block:
     - name: Install iscsi initiator
       ansible.builtin.package:
