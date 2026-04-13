@@ -40,3 +40,6 @@
 - name: Include disable swap
   when: not (swap_enabled | bool)
   ansible.builtin.import_tasks: "disable-swap.yml"
+
+- name: Finalize preflight (run handlers)
+  ansible.builtin.meta: flush_handlers
