@@ -1,6 +1,6 @@
 - name: Configure sysctl
   become: true
-  tags: [ node_network, sysctl ]
+  tags: [ node-network, sysctl ]
   block:
     - name: Load sysctl configs persistently
       ansible.posix.sysctl:

@@ -1,0 +1,12 @@
+- name: Install Extra Kernel Modules
+  tags: [ node-network, kernel ]
+  become: true
+  block:
+    - name: Install kernel module extras package
+      ansible.builtin.package:
+        name: "{{ kernel_modules_extra_pkg_name }}"
+        state: present
+      notify: Reboot
+
+    - name: Flush handlers for reboot 
+      ansible.builtin.meta: flush_handlers

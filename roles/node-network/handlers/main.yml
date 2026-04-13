@@ -1,0 +1,7 @@
+---
+# handlers file for node-network
+
+- name: Reboot machine
+  become: true
+  ansible.builtin.reboot:
+  listen: "Reboot"
