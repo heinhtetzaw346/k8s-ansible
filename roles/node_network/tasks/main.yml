@@ -1,2 +1,23 @@
 ---
 # tasks file for node_network
+
+- name: Load common variables
+  ansible.builtin.include_vars: "common.yml"
+  tags: [ always ]
+
+- name: Load OS-family variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+      skip: true
+  tags: [ always ]
+
+- name: Include Kernel Modules
+  ansible.builtin.include_tasks: "kernel_modules.yml"
+  tags: [ node_network, kernel ]
+
+- name: Include Kernel Modules
+  ansible.builtin.include_tasks: "sysctl_config.yml"
+  tags: [ node_network, sysctl ]

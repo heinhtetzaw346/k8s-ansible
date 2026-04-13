@@ -1,0 +1,10 @@
+- name: Configure sysctl
+  become: true
+  block:
+    - name: Load sysctl configs persistently
+      ansible.posix.sysctl:
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: present
+        reload: true
+      loop: "{{ sysctl_config | dict2items }}"
