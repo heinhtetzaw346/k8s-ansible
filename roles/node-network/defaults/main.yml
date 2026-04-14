@@ -1,2 +1,5 @@
 ---
 # defaults file for node-network
+ipvs_enabled: false
+additional_kernel_modules: []
+additional_sysctl_configs: {}

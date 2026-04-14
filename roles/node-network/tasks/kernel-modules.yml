@@ -8,7 +8,15 @@
         name: "{{ item }}"
         state: present
         persistent: present
-      loop: "{{ kernel_modules }}"
+      loop: "{{ base_kernel_modules }}"
+
+    - name: Load IPVS Kernel Modules persistently
+      when: ipvs_enabled | bool
+      community.general.modprobe:
+        name: "{{ item }}"
+        state: present
+        persistent: present
+      loop: "{{ ipvs_kernel_modules }}"
 
     - name: Load Additional Kernel Modules persistently
       when: additional_kernel_modules is defined

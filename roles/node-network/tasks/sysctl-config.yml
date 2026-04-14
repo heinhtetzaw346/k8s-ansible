@@ -2,10 +2,18 @@
   become: true
   tags: [ node-network, sysctl ]
   block:
-    - name: Load sysctl configs persistently
+    - name: Load Sysctl Configs Persistently
       ansible.posix.sysctl:
         name: "{{ item.key }}"
         value: "{{ item.value }}"
         state: present
         reload: true
-      loop: "{{ sysctl_config | dict2items }}"
+      loop: "{{ sysctl_configs | dict2items }}"
+
+    - name: Load Additional Sysctl Configs Persistently
+      ansible.posix.sysctl:
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: present
+        reload: true
+      loop: "{{ additional_sysctl_configs | dict2items }}"
