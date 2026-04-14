@@ -15,7 +15,11 @@
   tags: [ always ]
 
 - name: Include ISCSI
-  ansible.builtin.import_tasks: "iscsi.yml"
+  when: iscsi_enabled | bool
+  ansible.builtin.include_tasks: "iscsi.yml"
+  tags: [ always ]
 
 - name: Include NFS
-  ansible.builtin.import_tasks: "nfs.yml"
+  when: nfs_enabled | bool
+  ansible.builtin.include_tasks: "nfs.yml"
+  tags: [ always ]

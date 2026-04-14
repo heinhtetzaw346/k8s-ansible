@@ -1,3 +1,5 @@
 ---
 # defaults file for node-storage
 
+nfs_enabled: false
+iscsi_enabled: false
