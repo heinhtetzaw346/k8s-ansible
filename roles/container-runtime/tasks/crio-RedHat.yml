@@ -1,0 +1,34 @@
+- name: CRIO Installation and Setup
+  become: true
+  tags: [ container-runtime ]
+  block:
+    - name: Add CRIO Repo
+      ansible.builtin.yum_repository:
+        name: crio
+        description: "CRIO Container Runtime"
+        baseurl: https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v{{ crio_version }}/rpm/
+        gpgcheck: true
+        gpgkey: https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v{{ crio_version }}/rpm/repodata/repomd.xml.key
+        state: present
+
+    - name: Install CRIO
+      ansible.builtin.package:
+        name: cri-o
+        state: present
+        update_cache: true
+
+    - name: Install versionlock
+      ansible.builtin.package:
+        name: dnf-plugin-versionlock
+        state: present
+
+    - name: Exclude CRIO from updates
+      community.general.dnf_versionlock:
+        name: cri-o
+        state: excluded
+
+    - name: Start and Enable CRIO
+      ansible.builtin.service:
+        name: crio
+        state: started
+        enabled: true

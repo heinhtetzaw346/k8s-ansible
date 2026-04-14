@@ -1,0 +1,38 @@
+---
+# tasks file for container-runtime
+
+- name: Load common variables
+  ansible.builtin.include_vars: "common.yml"
+  tags: [ always ]
+
+- name: Load OS-family variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+      skip: true
+  tags: [ always ]
+
+- name: Check if CRI is in supported list
+  ansible.builtin.assert:
+    that:
+      - container_runtime in supported_container_runtimes
+    fail_msg: >
+      Invalid container runtime input: '{{ container_runtime }}'
+      Must be one of: {{ supported_container_runtimes | join(', ') }}
+    success_msg: "Validated container runtime input: {{ container_runtime }}"
+  tags: [ container-runtime ]
+
+- name: Include ensure gpg
+  ansible.builtin.import_tasks: "ensure-gpg.yml"
+  tags: [ always ]
+
+- name: Include the selected CRI
+  ansible.builtin.include_tasks: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ container_runtime }}-{{ ansible_distribution }}.yml"
+        - "{{ container_runtime }}-{{ ansible_os_family }}.yml"
+      skip: true
+  tags: [ always ]

@@ -1,0 +1,35 @@
+- name: CRIO Installation and Setup
+  become: true
+  tags: [ container-runtime ]
+  block:
+    - name: Get CRIO Repo Key
+      ansible.builtin.get_url:
+        url: https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v{{ crio_version }}/deb/Release.key
+        dest: /etc/apt/keyrings/crio.asc
+        mode: "0644"
+
+    - name: Add CRIO Repo
+      ansible.builtin.apt_repository:
+        repo: >
+          deb [arch={{ "amd64" if ansible_architecture == "x86_64" else "arm64" }}
+          signed-by=/etc/apt/keyrings/crio.asc]
+          https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v{{ crio_version }}/deb/ /
+        filename: crio
+        state: present
+
+    - name: Install CRIO
+      ansible.builtin.package:
+        name: cri-o
+        state: present
+        update_cache: true
+
+    - name: Exclude CRIO from updates
+      ansible.builtin.dpkg_selections:
+        name: cri-o
+        selection: hold
+
+    - name: Start and Enable CRIO
+      ansible.builtin.service:
+        name: crio
+        state: started
+        enabled: true

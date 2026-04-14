@@ -1,0 +1,34 @@
+- name: Containerd Installation and Setup
+  become: true
+  tags: [ container-runtime ]
+  block:
+    - name: Add Docker-CE Repo for Containerd
+      ansible.builtin.yum_repository:
+        name: docker-ce-stable
+        description: "Docker CE Stable - $basearch"
+        baseurl: "https://download.docker.com/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable"
+        gpgcheck: true
+        gpgkey: https://download.docker.com/linux/centos/gpg
+        state: present
+
+    - name: Install Containerd
+      ansible.builtin.package:
+        name: containerd.io-{{ containerd_version }}
+        state: present
+        update_cache: true
+
+    - name: Install versionlock
+      ansible.builtin.package:
+        name: dnf-plugin-versionlock
+        state: present
+
+    - name: Exclude containerd from updates
+      community.general.dnf_versionlock:
+        name: containerd.io
+        state: excluded
+
+    - name: Start and Enable containerd
+      ansible.builtin.service:
+        name: containerd
+        state: started
+        enabled: true

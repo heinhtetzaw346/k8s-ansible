@@ -1,0 +1,5 @@
+- name: Ensure GPG
+  become: true
+  ansible.builtin.package:
+    name: gpg
+    state: present

@@ -1,0 +1,22 @@
+- name: Containerd Installation and Setup
+  become: true
+  tags: [ container-runtime ]
+  block:
+    - name: Get Containerd Full Version
+      ansible.builtin.shell: |
+        apk list containerd | grep "{{ containerd_version }}" | head -n 1 | awk '{print $1}' | sed 's/^containerd-//'
+      args:
+        executable: /bin/sh
+      register: resolved_containerd_version
+      changed_when: false
+
+    - name: Install Containerd
+      ansible.builtin.package:
+        name: "{{ 'containerd=' + resolved_containerd_version.stdout if resolved_containerd_version.stdout != '' else 'containerd=~' + containerd_version }}"
+        state: present
+
+    - name: Start and Enable containerd
+      ansible.builtin.service:
+        name: containerd
+        state: started
+        enabled: true

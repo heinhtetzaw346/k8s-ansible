@@ -1,0 +1,22 @@
+- name: CRIO Installation and Setup
+  become: true
+  tags: [ container-runtime ]
+  block:
+    - name: Get CRIO Full Version
+      ansible.builtin.shell: |
+        apk list cri-o | grep "{{ crio_version }}" | head -n 1 | awk '{print $1}' | sed 's/^cri-o-//'
+      args:
+        executable: /bin/sh
+      register: resolved_crio_version
+      changed_when: false
+
+    - name: Install CRIO
+      ansible.builtin.package:
+        name: "{{ 'cri-o=' + resolved_crio_version.stdout if resolved_crio_version.stdout != '' else 'cri-o=~' + crio_version }}"
+        state: present
+
+    - name: Start and Enable CRIO
+      ansible.builtin.service:
+        name: crio
+        state: started
+        enabled: true
