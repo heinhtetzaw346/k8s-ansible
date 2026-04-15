@@ -1,0 +1,35 @@
+---
+# tasks file for k8s-init
+
+- name: Cluster existence check
+  ansible.builtin.stat:
+    path: "{{ kubernetes_cluster_existence_path }}"
+  register: kubernetes_joined_register
+  failed_when: false
+  changed_when: false
+  tags: [ k8s-init ]
+
+- name: Set kubernetes joined status
+  ansible.builtin.set_fact:
+    kubernetes_joined: "{{ kubernetes_joined_register.stat.exists }}"
+  tags: [ k8s-init ]
+
+- name: Pull images before init or join on control_plane
+  become: true
+  when: 
+    - inventory_hostname in groups['k8s_control_plane']
+    - not kubernetes_joined
+  ansible.builtin.command: "kubeadm config images pull --image-repository={{ kubernetes_registry_mirror }} --cri-socket=unix:///var/run/{{ container_runtime }}/{{ container_runtime }}.sock -v=5"
+  tags: [ k8s-init ]
+
+- name: Include control-plane init tasks
+  ansible.builtin.import_tasks: control-plane-init.yml
+  tags: [ k8s-init ]
+
+- name: Include control-plane join tasks
+  ansible.builtin.import_tasks: control-plane-join.yml
+  tags: [ k8s-init ]
+
+- name: Include worker tasks
+  ansible.builtin.import_tasks: worker.yml
+  tags: [ k8s-init ]

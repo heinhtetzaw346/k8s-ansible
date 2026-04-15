@@ -1,0 +1,10 @@
+- name: Control Plane Join
+  become: true
+  block:
+    - name: Run join command on secondary control plane nodes
+      when:
+        - inventory_hostname in groups['k8s_control_plane']
+        - not inventory_hostname == groups['k8s_control_plane'][0]
+        - not kubernetes_joined
+      ansible.builtin.command: "{{ hostvars[groups['k8s_control_plane'][0]]['join_cmd'] + '--control-plane' }}"
+      notify: Delete join token

@@ -1,0 +1,7 @@
+---
+# handlers file for k8s-init
+
+- name: Delete join token
+  when: inventory_hostname == groups['k8s_control_plane'][0]
+  ansible.builtin.command: kubeadm token delete {{ join_tkn }}
+  listen: "Delete join token"

@@ -1,0 +1,8 @@
+---
+# defaults file for k8s-init
+container_runtime: "crio"
+kubernetes_registry_mirror: registry.k8s.io
+pod_network_cidr: ""
+service_network_cidr: ""
+control_plane_endpoint: ""
+cluster_dns_domain: ""
