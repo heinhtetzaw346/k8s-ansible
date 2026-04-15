@@ -1,0 +1,36 @@
+- name: Kubernetes Components Installation
+  become: true
+  tags: [ k8s-install, k8s-components ]
+  block:
+    - name: Add K8S Repo
+      ansible.builtin.yum_repository:
+        name: k8s
+        description: kubernetes repository
+        baseurl: https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/rpm/
+        gpgcheck: true
+        gpgkey: https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/rpm/repodata/repomd.xml.key
+        state: present
+
+    - name: Install K8S Components
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+        update_cache: true
+      loop: "{{ kubernetes_components }}"
+
+    - name: Ensure versionlock
+      ansible.builtin.package:
+        name: dnf-plugin-versionlock
+        state: present
+
+    - name: Exclude K8S Components from updates
+      community.general.dnf_versionlock:
+        name: "{{ item }}"
+        state: excluded
+      loop: "{{ kubernetes_components }}"
+
+    - name: Start and Enable Kubelet
+      ansible.builtin.service:
+        name: kubelet
+        state: started
+        enabled: true

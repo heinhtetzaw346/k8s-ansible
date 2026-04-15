@@ -1,0 +1,24 @@
+- name: Kubernetes Components Installation
+  become: true
+  tags: [ k8s-install, k8s-components ]
+  block:
+    - name: Get Kubernetes Components Full Version
+      ansible.builtin.shell: |
+        apk list {{ item }} | grep "{{ kubernetes_version }}" | head -n 1 | awk '{print $1}' | sed 's/^{{ item }}-//'
+      args:
+        executable: /bin/sh
+      register: resolved_components_version
+      changed_when: false
+      loop: "{{ kubernetes_components }}"
+
+    - name: Install Kubernetes Components
+      ansible.builtin.package:
+        name: "{{ item.item + '=' + item.stdout if item.stdout != '' else item.item + '=~' + kubernetes_version }}"
+        state: present
+      loop: "{{ resolved_components_version.results }}"
+
+    - name: Start and Enable Kubelet
+      ansible.builtin.service:
+        name: kubelet
+        state: started
+        enabled: true
