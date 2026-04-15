@@ -17,7 +17,7 @@
         state: present
         update_cache: true
 
-    - name: Install versionlock
+    - name: Ensure  versionlock
       ansible.builtin.package:
         name: dnf-plugin-versionlock
         state: present
