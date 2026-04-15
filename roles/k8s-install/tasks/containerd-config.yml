@@ -1,0 +1,12 @@
+- name: Configure Containerd for Kubernetes
+  become: true
+  block:
+    - name: Write containerd config file
+      ansible.builtin.template:
+        src: containerd-config.toml
+        dest: "{{ containerd_config_path }}"
+        owner: root
+        group: root
+        mode: "0644"
+        backup: true
+      notify: "Restart CRI"

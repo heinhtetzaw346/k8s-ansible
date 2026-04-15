@@ -22,3 +22,10 @@
         - "k8s-install-{{ ansible_os_family }}.yml"
       skip: true
   tags: [ always ]
+
+- name: Include CRI configuration
+  ansible.builtin.import_tasks: "cri-config.yml"
+  tags: [ k8s-install, cri-config ]
+
+- name: Flush handlers for k8s-install
+  ansible.builtin.meta: flush_handlers

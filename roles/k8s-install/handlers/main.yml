@@ -1,2 +1,9 @@
 ---
 # handlers file for k8s-install
+
+- name: Restart CRI
+  become: true
+  ansible.builtin.service:
+    name: "{{ container_runtime }}"
+    state: restarted 
+  listen: "Restart CRI"

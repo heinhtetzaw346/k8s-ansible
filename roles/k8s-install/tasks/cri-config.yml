@@ -1,0 +1,19 @@
+- name: Configure CRI
+  become: true
+  block:
+    - name: Get pause image from kubeadm
+      ansible.builtin.shell: |
+        kubeadm config images list | grep pause | sed 's|^.*:||'
+      register: kubeadm_pause_version
+      changed_when: false
+      failed_when: false
+
+    - name: Include CRI configuration tasks
+      ansible.builtin.include_tasks: "{{ item }}"
+      with_first_found:
+        - files:
+            - "{{ container_runtime }}-config.yml"
+          skip: true
+      vars:
+        pause_image_version: "{{ kubeadm_pause_version.stdout }}"
+

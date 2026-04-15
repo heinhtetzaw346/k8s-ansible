@@ -1,2 +1,5 @@
 ---
 # defaults file for k8s-install
+kubernetes_version: "1.34"
+container_runtime: "crio"
+kubernetes_registry_mirror: "registry.k8s.io"

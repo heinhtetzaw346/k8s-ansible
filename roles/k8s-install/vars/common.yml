@@ -3,3 +3,5 @@ kubernetes_components:
   - kubelet
   - kubectl
   - cri-tools
+containerd_config_path: "/etc/containerd/config.toml"
+crio_config_path: "/etc/containers/registries.conf.d/crio.conf"

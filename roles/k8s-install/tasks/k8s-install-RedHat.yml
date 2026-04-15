@@ -6,9 +6,9 @@
       ansible.builtin.yum_repository:
         name: k8s
         description: kubernetes repository
-        baseurl: https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/rpm/
+        baseurl: https://pkgs.k8s.io/core:/stable:/v{{ kubernetes_version }}/rpm/
         gpgcheck: true
-        gpgkey: https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/rpm/repodata/repomd.xml.key
+        gpgkey: https://pkgs.k8s.io/core:/stable:/v{{ kubernetes_version }}/rpm/repodata/repomd.xml.key
         state: present
 
     - name: Install K8S Components

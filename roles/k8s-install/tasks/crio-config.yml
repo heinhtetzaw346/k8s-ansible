@@ -1,0 +1,12 @@
+- name: Configure CRIO for Kubernetes
+  become: true
+  block:
+    - name: Write crio config file
+      ansible.builtin.template:
+        src: crio-config.conf
+        dest: "{{ crio_config_path }}"
+        owner: root
+        group: root
+        mode: "0644"
+        backup: true
+      notify: "Restart CRI"

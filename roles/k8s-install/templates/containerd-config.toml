@@ -1,0 +1,8 @@
+disabled_plugins = []
+
+[plugins."io.containerd.cri.v1.runtime".containerd.runtimes.runc.options]
+  SystemdCgroup = true
+
+[plugins."io.containerd.cri.v1.images"]
+  [plugins."io.containerd.cri.v1.images".pinned_images]
+    sandbox = "{{ kubernetes_registry_mirror }}/pause:{{ pause_image_version }}"

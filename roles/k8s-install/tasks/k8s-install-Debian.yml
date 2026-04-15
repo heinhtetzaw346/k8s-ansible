@@ -4,7 +4,7 @@
   block:
     - name: Get K8S Repo Key
       ansible.builtin.get_url:
-        url: https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/Release.key
+        url: https://pkgs.k8s.io/core:/stable:/v{{ kubernetes_version }}/deb/Release.key
         dest: /etc/apt/keyrings/k8s.asc
         mode: "0644"
 
@@ -13,7 +13,7 @@
         repo: >
           deb [arch={{ "amd64" if ansible_architecture == "x86_64" else "arm64" }}
           signed-by=/etc/apt/keyrings/k8s.asc]
-          https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/ / 
+          https://pkgs.k8s.io/core:/stable:/v{{ kubernetes_version }}/deb/ / 
         filename: k8s
         state: present
 
