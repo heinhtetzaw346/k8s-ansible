@@ -1,0 +1,17 @@
+- name: EBPF related tasks on Alpine
+  become: true
+  block:
+    - name: Add script to enable share mounts
+      ansible.builtin.template:
+        src: mount-shared.start
+        dest: /etc/local.d/mount-shared.start
+        owner: root
+        group: root
+        mode: "0755"
+      notify: "Reboot"
+
+    - name: Add local as service
+      ansible.builtin.service:
+        name: local
+        state: started
+        enabled: true

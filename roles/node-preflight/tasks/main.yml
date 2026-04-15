@@ -18,7 +18,6 @@
   become: true
   ansible.builtin.package:
     update_cache: true
-  run_once: true
 
 - name: Include dns
   ansible.builtin.import_tasks: "dns.yml"
@@ -50,5 +49,11 @@
 - name: Include check cgroupv2
   ansible.builtin.import_tasks: "cgroup.yml"
 
+- name: Include ebpf requirement tasks for Alpine
+  when: ansible_facts["os_family"] == "Alpine"
+  ansible.builtin.import_tasks: "ebpf-Alpine.yml"
+  tags: [ node-preflight, ebpf ]
+
 - name: Finalize preflight (run handlers)
   ansible.builtin.meta: flush_handlers
+  tags: [node-preflight]

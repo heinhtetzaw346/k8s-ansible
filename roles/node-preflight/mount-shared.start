@@ -1,0 +1,4 @@
+#!/bin/sh
+# Ensure mounts are shared for K8s CNI (Calico/Cilium)
+mount --make-rshared /
+mount --make-rshared /sys
