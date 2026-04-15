@@ -1,5 +1,6 @@
 - name: Ensure GPG
   become: true
+  tags: [ container-runtime ]
   ansible.builtin.package:
     name: gpg
     state: present

@@ -26,7 +26,6 @@
 
 - name: Include ensure gpg
   ansible.builtin.import_tasks: "ensure-gpg.yml"
-  tags: [ always ]
 
 - name: Include the selected CRI
   ansible.builtin.include_tasks: "{{ item }}"
