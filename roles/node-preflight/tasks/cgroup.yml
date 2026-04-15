@@ -1,0 +1,14 @@
+- name: Ensure Cgroup v2
+  become: true
+  tags: [ node-preflight, cgroup ]
+  block:
+    - name: Check if cgroupv2 is enabled
+      ansible.builtin.command: grep -q cgroup2 /proc/mounts
+      register: grep_cgroup2
+      ignore_errors: true
+      changed_when: false
+
+    - name: Fail if Cgroup v2 is not active
+      ansible.builtin.fail:
+        msg: "Node {{ inventory_hostname }} is not running Cgroup v2."
+      when: grep_cgroup2.rc != 0
