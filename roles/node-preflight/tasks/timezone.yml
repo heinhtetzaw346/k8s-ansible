@@ -6,7 +6,6 @@
       ansible.builtin.package:
         name: tzdata
         state: present
-        update_cache: true
 
     - name: Set timezone
       community.general.timezone:

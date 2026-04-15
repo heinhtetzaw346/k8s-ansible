@@ -6,4 +6,3 @@
       ansible.builtin.package:
         name: "{{ nfs_pkg_name }}"
         state: present
-        update_cache: true

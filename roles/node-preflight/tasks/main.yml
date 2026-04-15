@@ -14,6 +14,11 @@
       skip: true
   tags: [ always ]
 
+- name: Update package caches
+  ansible.builtin.package:
+    update_cache: true
+  run_once: true
+
 - name: Include dns
   ansible.builtin.import_tasks: "dns.yml"
 

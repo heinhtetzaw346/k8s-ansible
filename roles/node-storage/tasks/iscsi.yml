@@ -6,7 +6,6 @@
       ansible.builtin.package:
         name: "{{ iscsi_pkg_name }}"
         state: present
-        update_cache: true
 
     - name: Start and enable iscsid
       ansible.builtin.service:
