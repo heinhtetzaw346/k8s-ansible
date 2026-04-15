@@ -1,0 +1,16 @@
+---
+#handlers file for node-preflight
+
+- name: Restart chrony
+  become: true
+  ansible.builtin.service:
+    name: "{{ chrony_service_name }}"
+    state: restarted
+  listen: "Restart chrony"
+
+- name: Restart NetworkManager
+  become: true
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
+  listen: Restart NetworkManager
