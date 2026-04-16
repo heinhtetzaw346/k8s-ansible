@@ -1,7 +1,7 @@
 disabled_plugins = []
 
 [plugins."io.containerd.cri.v1.runtime".containerd.runtimes.runc.options]
-  SystemdCgroup = true
+  SystemdCgroup = {{ systemd_cgroup_enabled | lower }}
 
 [plugins."io.containerd.cri.v1.images"]
   [plugins."io.containerd.cri.v1.images".pinned_images]

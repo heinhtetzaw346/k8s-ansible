@@ -3,7 +3,7 @@
   block:
     - name: Write crio config file
       ansible.builtin.template:
-        src: crio-config.conf
+        src: crio-config.conf.j2
         dest: "{{ crio_config_path }}"
         owner: root
         group: root

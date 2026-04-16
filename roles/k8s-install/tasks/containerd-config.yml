@@ -3,7 +3,7 @@
   block:
     - name: Write containerd config file
       ansible.builtin.template:
-        src: containerd-config.toml
+        src: containerd-config.toml.j2
         dest: "{{ containerd_config_path }}"
         owner: root
         group: root

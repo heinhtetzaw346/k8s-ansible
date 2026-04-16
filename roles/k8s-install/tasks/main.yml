@@ -29,3 +29,4 @@
 
 - name: Flush handlers for k8s-install
   ansible.builtin.meta: flush_handlers
+  tags: [ k8s-install, cri-config ]
