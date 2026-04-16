@@ -1,9 +1,9 @@
 - name: Worker tasks
+  when:
+    - inventory_hostname in groups['k8s_workers']
+    - not kubernetes_joined
   become: true
   block:
     - name: Run join command on worker nodes
-      when:
-        - inventory_hostname in groups['k8s_workers']
-        - not kubernetes_joined
       ansible.builtin.command: "{{ hostvars[groups['k8s_control_plane'][0]]['join_cmd'] }}"
       notify: Delete join token
