@@ -1,0 +1,14 @@
+- name: Configure IPVS
+  become: true
+  block:
+    - name: Load IPVS Kernel Modules persistently
+      community.general.modprobe:
+        name: "{{ item }}"
+        state: present
+        persistent: present
+      loop: "{{ ipvs_kernel_modules }}"
+
+    - name: Install ipvsadm
+      ansible.builtin.package:
+        name: "{{ ipvs_pkg_name }}"
+        state: present

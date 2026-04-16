@@ -25,6 +25,13 @@
 
 - name: Include Kernel Modules
   ansible.builtin.import_tasks: "kernel-modules.yml"
+  tags: [ node-network, kernel ]
 
 - name: Include Sysctl Configs
   ansible.builtin.import_tasks: "sysctl-config.yml"
+  tags: [ node-network, sysctl ]
+
+- name: Include IPVS
+  when: ipvs_enabled | bool
+  ansible.builtin.import_tasks: "ipvs.yml"
+  tags: [ node-network, ipvs ]
