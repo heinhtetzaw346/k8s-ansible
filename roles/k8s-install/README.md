@@ -1,38 +1,39 @@
-Role Name
-=========
+# k8s-install
 
-A brief description of the role goes here.
+The `k8s-install` role is dedicated exclusively to the distribution-specific installation of the core Kubernetes components natively required to instantiate or join a cluster infrastructure. 
 
-Requirements
-------------
+It handles:
+- Locating and defining the appropriate Kubernetes package repositories for your cluster OS (e.g., RedHat `.repo` mappings vs. Debian `.list` mappings).
+- Installing the precise `kubelet`, `kubeadm`, and `kubectl` binaries corresponding to `kubernetes_version`.
+- **Configuring the Container Runtime Interface (CRI)**: The role is explicitly responsible for dynamically querying `kubeadm` to identify the exact `pause` image (sandbox container) mapped to the downloaded version. It utilizes this data to systematically inject correct daemon properties into the respective CRI config files (e.g. `crio.conf` or `containerd.toml`) and instructs `kubelet` on exactly which local Unix wrapper socket to utilize.
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## How to Use
 
-Role Variables
---------------
+Invoke this immediately following the definition of your environment repositories and storage plugins:
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```yaml
+- name: Deploy Kubernetes Codebase
+  hosts: all
+  roles:
+    - role: k8s-install
+      tags: [ k8s, install ]
+```
 
-Dependencies
-------------
+## Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+Adjust settings appropriately depending on the ecosystem you reside within or whether internet requests need to be routed via corporate registries.
 
-Example Playbook
-----------------
+### User-Defined Variables (`defaults/main.yml`)
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+| Variable                       | Default               | Description                                                                                                                                           |
+|--------------------------------|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `kubernetes_version`           | `"1.34"`              | The exact semantic version (down to the patch) of `kubelet` and `kubeadm` to install on the machine.                                                  |
+| `container_runtime`            | `"crio"`              | String referencing the CRI you installed prior. It informs `kubelet` about the communication socket parameters it must utilize locally.              |
+| `kubernetes_registry_mirror`   | `"registry.k8s.io"`   | The container image registry to validate configuration dependencies from. If your environment prohibits external internet access, change this!     |
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+### Role Internal Variables (`vars/`)
+You shouldn't need to override these. They outline mapping architectures natively required.
 
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+| Variable | Origin | Description |
+|---|---|---|
+| (Various OS Mappings) | `vars/common.yml`... | Internal OS-level maps defining exact package architecture paths or names for the `kubelet` daemon dependencies. |

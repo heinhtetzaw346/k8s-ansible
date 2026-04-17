@@ -1,38 +1,41 @@
-Role Name
-=========
+# container-runtime
 
-A brief description of the role goes here.
+The `container-runtime` role bridges the gap between the operating system and Kubernetes by installing the core Container Runtime Interface (CRI). Kubernetes schedules and maintains workloads, but the underlying execution of containers fundamentally relies on these engines. 
 
-Requirements
-------------
+The role is fully autonomous and operates dynamically across different OS environments (RedHat/Debian/Alpine). It intelligently:
+- Asserts that the requested runtime engine exists and is supported.
+- Resolves GPG encryption keys for downstream package managers automatically.
+- Mounts necessary repositories specific to the OS distribution requested.
+- Performs exact version orchestration, downloading specifically pinned `cri-o` or `containerd` daemons vs. rolling packages.
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## How to Use
 
-Role Variables
---------------
+Integrate this into your playbook right after your OS and storage capabilities have been defined:
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```yaml
+- name: Prepare Container Engines
+  hosts: all
+  roles:
+    - role: container-runtime
+      tags: [ runtime ]
+```
 
-Dependencies
-------------
+## Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+This role lets you choose exactly which engine powers your pods, as well as precisely control the software versioning applied to your data plane nodes.
 
-Example Playbook
-----------------
+### User-Defined Variables (`defaults/main.yml`)
+These variables drive the installation paths and versions. Update them securely via your `sample-vars.yml` global structure.
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+| Variable             | Default                 | Description                                                                                                                                           |
+|----------------------|-------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `container_runtime`  | `"crio"`                | String defining the desired container runtime. Valid options currently include: `"crio"` or `"containerd"`.                                           |
+| `crio_version`       | `"1.34"`                | The *major* version footprint of CRI-O to install. (CRI-O versions typically mirror exact Kubernetes cluster major releases).                         |
+| `containerd_version` | `"2.2.0"`               | The *full semantic* version footprint of containerd to install (e.g., `x.y.z`).                                                                       |
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+### Role Internal Variables (`vars/`)
+Internal constants driving security validation checks to prevent botched setups.
 
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+| Variable                       | Origin            | Description                                                              |
+|--------------------------------|-------------------|--------------------------------------------------------------------------|
+| `supported_container_runtimes` | `vars/common.yml` | Strict list containing valid engines to prevent typos or unsupported CRIs (`["crio", "containerd"]`). |
