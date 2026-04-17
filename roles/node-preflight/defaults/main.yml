@@ -2,11 +2,13 @@
 # defaults file for node-preflight
 ntp_server: "asia.pool.ntp.org"
 timezone: "UTC"
+# Preferably use a local DNS server to get control plane endpoint
+# records and other custom records that the cluster might need.
 dns_servers:
   - "1.1.1.1"
   - "8.8.8.8"
   - "9.9.9.9"
 search_domain: "local"
-security_enabled: true
+security_enabled: false
 firewall_enabled: true
 swap_enabled: false
