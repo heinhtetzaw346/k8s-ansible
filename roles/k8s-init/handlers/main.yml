@@ -2,6 +2,23 @@
 # handlers file for k8s-init
 
 - name: Delete join token
-  when: inventory_hostname == groups['k8s_control_plane'][0]
+  become: true
+  when: inventory_hostname == groups["k8s_control_plane"][0]
   ansible.builtin.command: kubeadm token delete {{ join_tkn }}
   listen: "Delete join token"
+
+- name: Restart keepalived
+  become: true
+  when: inventory_hostname in groups["k8s_control_plane"]
+  ansible.builtin.service:
+    name: keepalived
+    state: restarted
+  listen: "Restart keepalived"
+
+- name: Restart haproxy
+  become: true
+  when: inventory_hostname in groups["k8s_control_plane"]
+  ansible.builtin.service:
+    name: haproxy
+    state: restarted
+  listen: "Restart haproxy"

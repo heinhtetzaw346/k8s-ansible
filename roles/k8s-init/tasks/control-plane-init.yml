@@ -17,6 +17,22 @@
         - not kubernetes_joined
       ansible.builtin.command: kubeadm init --upload-certs --config=/etc/kubernetes/kubeadm-config.yml
 
+    - name: Contro Plane certificate key tasks
+      when: not ( groups["k8s_control_plane"] | length == 1 )
+      block:
+        - name: Generate control plane certificate key
+          ansible.builtin.shell: "python3 -c 'import os; print(os.urandom(32).hex())'"
+          register: generated_cert_key
+          changed_when: false
+
+        - name: Save certificate key
+          ansible.builtin.set_fact:
+            cert_key: "{{ generated_cert_key.stdout }}"
+
+        - name: Upload cert with generated certificate key
+          ansible.builtin.command: kubeadm init phase upload-certs --upload-certs --certificate-key {{ cert_key }}
+          register: certificate_key
+
     - name: Generate join token
       ansible.builtin.command: kubeadm token generate
       register: join_token
@@ -32,3 +48,4 @@
     - name: Save join command
       ansible.builtin.set_fact:
         join_cmd: "{{ join_command.stdout }}"
+

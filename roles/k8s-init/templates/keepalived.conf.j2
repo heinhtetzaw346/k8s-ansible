@@ -1,0 +1,30 @@
+! Managed by k8s-ansible
+
+global_defs {
+  router_id {{ inventory_hostname }}
+  script_user root
+}
+vrrp_script check_apiserver {
+  script "{{ keepalived_chk_script_path }}"
+  weight -2
+  interval 3
+  fall 10
+  rise 2
+}
+
+vrrp_instance VI_1 {
+    state {{ "MASTER" if inventory_hostname == groups["k8s_control_plane"][0] else "BACKUP" }}
+    interface {{ ansible_default_ipv4.interface }}
+    virtual_router_id {{ control_plane_lb_vrid }}
+    priority {{ 101 if inventory_hostname == groups["k8s_control_plane"][0] else 100 }}
+    authentication {
+        auth_type PASS
+        auth_pass {{ control_plane_lb_auth }}
+    }
+    virtual_ipaddress {
+        {{ control_plane_lb_vip }}
+    }
+    track_script {
+        check_apiserver
+    }
+}

@@ -1,3 +1,6 @@
 ---
 # vars file for k8s-init
 kubernetes_cluster_existence_path: /etc/kubernetes/kubelet.conf
+lb_pkg_names:
+  - haproxy
+  - keepalived

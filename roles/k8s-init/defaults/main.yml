@@ -7,3 +7,7 @@ service_network_cidr: ""
 control_plane_endpoint: ""
 cluster_dns_domain: ""
 ipvs_enabled: false
+control_plane_lb_port: "443"
+control_plane_lb_vip: ""
+control_plane_lb_auth: "k8slbpass"
+control_plane_lb_vrid: "51"

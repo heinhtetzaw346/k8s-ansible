@@ -1,0 +1,54 @@
+- name: Setup control plane HA
+  become: true
+  block:
+    - name: Install Software Load Balancers
+      ansible.builtin.package:
+        name: "{{ lb_pkg_names }}"
+        state: present
+
+    - name: Ensure curl for health check script
+      ansible.builtin.package:
+        name: curl
+        state: present
+
+    - name: Ensure keepalived conf dir exists
+      file:
+        path: "{{ keepalived_conf_path | dirname }}"
+        state: directory
+
+    - name: Write keepalived config
+      ansible.builtin.template:
+        src: keepalived.conf.j2
+        dest: "{{ keepalived_conf_path }}"
+        owner: root
+        group: root
+        mode: "0644"
+        backup: true
+      notify: Restart keepalived
+
+    - name: Write keepalived check script
+      ansible.builtin.template:
+        src: check_apiserver.sh.j2
+        dest: "{{ keepalived_chk_script_path }}"
+        owner: root
+        group: root
+        mode: "0755"
+        backup: true
+      notify: Restart keepalived
+
+    - name: Write haproxy config
+      ansible.builtin.template:
+        src: haproxy.cfg.j2
+        dest: "{{ haproxy_conf_path }}"
+        owner: root
+        group: root
+        mode: "0644"
+        backup: true
+      notify: Restart haproxy
+
+    - name: Start the services
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: started
+        enabled: true
+      loop: "{{ lb_pkg_names }}"

@@ -1,18 +1,38 @@
 ---
 # tasks file for k8s-init
 
+- name: Load common variables
+  ansible.builtin.include_vars: "common.yml"
+  tags: [ always ]
+
+- name: Load OS-family variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+      skip: true
+  tags: [ always ]
+
 - name: Cluster existence check
   ansible.builtin.stat:
     path: "{{ kubernetes_cluster_existence_path }}"
   register: kubernetes_joined_register
   failed_when: false
   changed_when: false
-  tags: [ k8s-init ]
+  tags: [ k8s-init, control-plane-ha ]
 
 - name: Set kubernetes joined status
   ansible.builtin.set_fact:
     kubernetes_joined: "{{ kubernetes_joined_register.stat.exists }}"
-  tags: [ k8s-init ]
+  tags: [ k8s-init, control-plane-ha ]
+
+- name: Include control-plane ha tasks
+  when: 
+    - inventory_hostname in groups['k8s_control_plane']
+    - not kubernetes_joined
+  ansible.builtin.import_tasks: control-plane-ha.yml
+  tags: [ k8s-init, control-plane-ha]
 
 - name: Pull images before init or join on control_plane
   become: true

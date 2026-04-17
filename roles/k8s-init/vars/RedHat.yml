@@ -1,0 +1,3 @@
+haproxy_conf_path: /etc/haproxy/haproxy.cfg
+keepalived_conf_path: /etc/keepalived/keepalived.conf
+keepalived_chk_script_path: /etc/keepalived/check_apiserver.sh
