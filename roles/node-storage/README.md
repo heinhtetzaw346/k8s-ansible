@@ -1,38 +1,40 @@
-Role Name
-=========
+# node-storage
 
-A brief description of the role goes here.
+The `node-storage` role prepares your Kubernetes nodes by installing and configuring the foundational software dependencies required for dynamic storage backends. By default, Kubernetes doesn't ship with drivers or clients for external storage solutions. To mount dynamic persistent volumes like Network File System (NFS) or Internet Small Computer Systems Interface (iSCSI), the underlying base instances need these specific clients installed outright.
 
-Requirements
-------------
+This role encapsulates tasks for deploying dependencies for:
+- **iSCSI**: Installs `open-iscsi`/`iscsi-initiator-utils` and handles enabling/starting the `iscsid` initiator daemon.
+- **NFS**: Installs `nfs-common`/`nfs-utils` to allow Kubernetes pods native NFS mounts.
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## How to Use
 
-Role Variables
---------------
+Simply include it inside your deployment playbook immediately after your preflight configurations:
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```yaml
+- name: Prepare OS dependencies
+  hosts: all
+  roles:
+    - role: node-storage
+      tags: [ storage ]
+```
 
-Dependencies
-------------
+## Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+The parameters govern which storage backends should be configured on the hosts. The role abstracts away OS package deviations internally.
 
-Example Playbook
-----------------
+### User-Defined Variables (`defaults/main.yml`)
+These parameters toggle the specific components. You can override these inside your root playbook's `sample-vars.yml` structure. By default, both are typically explicitly disabled.
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+| Variable             | Default                 | Description                                                                                                                                           |
+|----------------------|-------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `nfs_enabled`        | `false`                 | Activates the installation of NFS client binaries, allowing dynamic mounting.                                                                         |
+| `iscsi_enabled`      | `false`                 | Activates the installation of the iSCSI daemon and targets, registering the node as a compliant iSCSI initiator.                                      |
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+### Role Internal Variables (`vars/`)
+These variables resolve compatibility between RedHat, Debian, and Alpine derivatives. You generally do not need to override these.
 
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+| Variable              | Origin                   | Description                                                                    |
+|-----------------------|--------------------------|--------------------------------------------------------------------------------|
+| `iscsi_service_name`  | `vars/common.yml`        | The service name to start for iSCSI. (`"iscsid"`)                              |
+| `iscsi_pkg_name`      | `vars/<OS_Family>.yml`   | The target package to locate and install (`"open-iscsi"` or `"iscsi-initiator-utils"`). |
+| `nfs_pkg_name`        | `vars/<OS_Family>.yml`   | The target package to locate and install (`"nfs-common"` or `"nfs-utils"`).    |
