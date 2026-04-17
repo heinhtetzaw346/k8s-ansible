@@ -13,10 +13,9 @@
 
     - name: Install K8S Components
       ansible.builtin.package:
-        name: "{{ item }}"
+        name: "{{ kubernetes_components }}"
         state: present
         update_cache: true
-      loop: "{{ kubernetes_components }}"
 
     - name: Ensure versionlock
       ansible.builtin.package:

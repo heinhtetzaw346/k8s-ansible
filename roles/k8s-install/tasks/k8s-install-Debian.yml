@@ -19,16 +19,16 @@
 
     - name: Install K8S Components
       ansible.builtin.package:
-        name: "{{ item }}"
+        name: "{{ kubernetes_components }}"
         state: present
         update_cache: true
-      loop: "{{ kubernetes_components }}"
 
     - name: Exclude K8S Components from updates
       ansible.builtin.dpkg_selections:
         name: "{{ item }}"
         selection: hold
       loop: "{{ kubernetes_components }}"
+
 
     - name: Start and Enable Kubelet
       ansible.builtin.service:
