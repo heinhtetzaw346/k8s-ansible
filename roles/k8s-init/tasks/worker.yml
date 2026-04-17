@@ -6,4 +6,3 @@
   block:
     - name: Run join command on worker nodes
       ansible.builtin.command: "{{ hostvars[groups['k8s_control_plane'][0]]['join_cmd'] }}"
-      notify: Delete join token
