@@ -57,5 +57,6 @@ These variables define OS-specific mappings such as file paths and package names
 > [!WARNING]
 > **cgroup v2 Failures**: If a task fails on the cgroup v2 check, you must verify that the host node has `cgroupfs v2` enabled at the OS level, is utilized by the init system, and is mounted exactly at `/sys/fs/cgroup`.
 >
-> - **Systemd (Debian & RedHat)**: Modern releases handle and utilize cgroup v2 natively by default. If it fails, ensure you don't have legacy kernel parameters active (like `systemd.unified_cgroup_hierarchy=0`).
-> - **OpenRC (Alpine)**: OpenRC uses a hybrid cgroups setup by default. You might need to explicitly set it to cgroup v2 hierarchy via your `/etc/rc.conf` file. See the official documentation for further guidance: [Alpine Linux OpenRC Cgroups Wiki](https://wiki.alpinelinux.org/wiki/OpenRC#Cgroups).
+
+- **Systemd (Debian & RedHat)**: Modern releases handle and utilize cgroup v2 natively by default. If it fails, ensure you don't have legacy kernel parameters active (like `systemd.unified_cgroup_hierarchy=0`).
+- **OpenRC (Alpine)**: OpenRC uses a hybrid cgroups setup by default. You might need to explicitly set it to cgroup v2 hierarchy via your `/etc/rc.conf` file. See the official documentation for further guidance: [Alpine Linux OpenRC Cgroups Wiki](https://wiki.alpinelinux.org/wiki/OpenRC#Cgroups).
