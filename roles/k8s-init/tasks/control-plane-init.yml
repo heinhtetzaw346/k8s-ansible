@@ -17,7 +17,7 @@
         - not kubernetes_joined
       ansible.builtin.command: kubeadm init --upload-certs --config=/etc/kubernetes/kubeadm-config.yml
 
-    - name: Contro Plane certificate key tasks
+    - name: Control Plane certificate key tasks
       when: not ( groups["k8s_control_plane"] | length == 1 )
       block:
         - name: Generate control plane certificate key
