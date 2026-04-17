@@ -1,0 +1,39 @@
+---
+# Sample playbook to deploy a Kubernetes cluster.
+# Run this playbook with: ansible-playbook -i sample-inventory.yml sample-playbook.yml
+- name: Deploy Kubernetes Cluster
+  # Define which hosts this playbook should target. 'all' is typically used
+  # as individual roles target specific host groups (e.g., k8s_control_plane).
+  hosts: all
+  
+  # Specify the file(s) containing your configuration variables.
+  vars_files:
+    - sample-vars.yml
+  
+  # The roles define the tasks that will be executed on the nodes.
+  # The roles generally execute in this specific order to properly 
+  # prepare instances, install components, and launch the cluster.
+  roles:
+    # 1. node-preflight: Applies base OS configurations, disables swap, sets time zones, etc.
+    - role: node-preflight
+      tags: [ pre-k8s, preflight, config ]
+      
+    # 2. node-storage: Configures required storage backends or packages (e.g., iSCSI, NFS client).
+    - role: node-storage
+      tags: [ pre-k8s, storage ]
+      
+    # 3. node-network: Configures networking requirements, firewalls, routing, and DNS settings.
+    - role: node-network
+      tags: [ pre-k8s, network ]
+      
+    # 4. container-runtime: Installs and configures the container runtime (e.g., CRI-O, containerd).
+    - role: container-runtime
+      tags: [ pre-k8s, runtime ]
+      
+    # 5. k8s-install: Installs Kubernetes components packages (kubelet, kubeadm, kubectl).
+    - role: k8s-install
+      tags: [ k8s, install ]
+      
+    # 6. k8s-init: Initializes the cluster on control plane nodes and joins worker nodes.
+    - role: k8s-init
+      tags: [ k8s, init ]

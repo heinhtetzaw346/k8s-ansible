@@ -1,0 +1,115 @@
+---
+# Sample Configuration Variables for Kubernetes Deployment
+# This file contains all customizable parameters extracted from the role defaults.
+# Variables marked with "[ADVANCED]" are not strictly necessary to be 
+# changed and should only be modified under special circumstances.
+
+# ==========================================
+# 1. Base OS Configuration
+# ==========================================
+# NTP server for time synchronization across all nodes. Crucial for cluster stability.
+ntp_server: "asia.pool.ntp.org"
+
+# Timezone setting for all nodes
+timezone: "UTC"
+
+# Custom DNS resolvers for the underlying OS
+# You should use a local dns server preferrably to get the custom control plane endpoint record
+# and other custom records the cluster might need.
+dns_servers: 
+  - "1.1.1.1"
+  - "8.8.8.8"
+  - "9.9.9.9"
+
+# Search domain appended to local network hostname resolutions
+search_domain: "local"
+
+# Security settings (SELinux on RedHat/AppArmor on Debian/Ubuntu)
+security_enabled: false
+
+# Whether to configure OS level firewalls (firewalld, UFW)
+firewall_enabled: true
+
+# [ADVANCED] Whether to keep swap enabled. Kubernetes typically expects swap to be disabled.
+# Only change this if deploying specific features that natively support swap.
+swap_enabled: false
+
+
+# ==========================================
+# 2. Kernel and Feature Toggles
+# ==========================================
+# Enable IPVS for kube-proxy (recommended for performance over iptables)
+ipvs_enabled: false
+
+# Enable/install dependencies for iSCSI storage attachments
+iscsi_enabled: false
+
+# Enable/install dependencies for NFS storage class provisions
+nfs_enabled: false
+
+# [ADVANCED] List of additional kernel modules to load on the nodes. 
+# Rarely needed unless custom workloads require them.
+additional_kernel_modules: []
+
+# [ADVANCED] Dictionary of additional sysctl configurations to apply.
+# Default tuning is generally sufficient.
+additional_sysctl_configs: {}
+
+
+# ==========================================
+# 3. Component Versions & Runtime Configuration
+# ==========================================
+# Which container runtime to use (e.g., "crio" or "containerd")
+container_runtime: "crio"
+
+# The specific major version of CRI-O to install
+crio_version: "1.34"
+
+# [ADVANCED] The specific full semantic version of containerd to install.
+containerd_version: "2.2.0"
+
+# The specific Kubernetes version to install (kubeadm, kubelet, kubectl)
+kubernetes_version: "1.34"
+
+# Optional: Container image registry mirror to pull k8s components from.
+# Useful for environments with rate limits or restricted internet access.
+kubernetes_registry_mirror: "registry.k8s.io"
+
+
+# ==========================================
+# 4. Kubernetes Networking
+# ==========================================
+# The CIDR block for internal Pod IP addresses. Must not overlap with host networks.
+pod_network_cidr: ""
+
+# The CIDR block for internal ClusterIP Services. Leave empty to use the default (10.96.0.0/12).
+service_network_cidr: ""
+
+# [ADVANCED] The DNS domain used for internal Kubernetes services.
+# Usually fine to leave empty or as default ('cluster.local').
+cluster_dns_domain: ""
+
+
+# ==========================================
+# 5. Control Plane High Availability
+# ==========================================
+# The endpoint (FQDN or IP) that worker nodes use to reach the API server.
+# For HA setups, this points to a load balancer. If left blank, it falls back
+# to the IP of the first control plane node.
+control_plane_endpoint: ""
+
+# A specific Virtual IP assigned to a local load balancer (like Keepalived)
+# if you are setting up HA without an external hardware/cloud LB.
+control_plane_lb_vip: ""
+
+# [ADVANCED] Port used by the control plane local load balancer. 
+# Defaults to 443 for API masking, usually shouldn't need changing.
+control_plane_lb_port: "443"
+
+# [ADVANCED] Keepalived VRRP authentication password. 
+# Safe to keep default unless network necessitates strict isolation.
+control_plane_lb_auth: "k8spass"
+
+# [ADVANCED] Keepalived Virtual Router ID. Must be unique on the local network subnet.
+# Change only if there's a VRRP conflict on the same L2 network.
+control_plane_lb_vrid: "51"

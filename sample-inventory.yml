@@ -1,0 +1,43 @@
+---
+# Sample Ansible Inventory for Kubernetes Cluster
+# This inventory defines the nodes in your cluster and their roles.
+
+k8s_nodes:
+  children:
+    # -------------------------------------------------------------
+    # Control Plane Nodes
+    # -------------------------------------------------------------
+    # These nodes run the Kubernetes control plane components 
+    # (API server, etcd, scheduler, controller manager).
+    # It is recommended to have an odd number of control plane nodes 
+    # (e.g., 1, 3, or 5) for high availability and consensus.
+    k8s_control_plane:
+      hosts:
+        k8s-cp-1:
+          # The IP address or hostname to connect to the node
+          ansible_host: 192.168.1.10
+          # The SSH user to connect as
+          ansible_user: k8sadmin
+        k8s-cp-2:
+          ansible_host: 192.168.1.11
+          ansible_user: k8sadmin
+          # Specify python interpreter if it's not in the default location
+          ansible_python_interpreter: /usr/bin/python3
+        k8s-cp-3:
+          ansible_host: 192.168.1.12
+          ansible_user: k8sadmin
+
+    # -------------------------------------------------------------
+    # Worker Nodes
+    # -------------------------------------------------------------
+    # These nodes run your application workloads (Pods).
+    k8s_workers:
+      hosts:
+        # Example Debian worker node
+        k8s-worker-1:
+          ansible_host: 192.168.1.20
+          ansible_user: k8sadmin
+        # You can add more worker nodes here as your cluster grows
+        k8s-worker-2:
+          ansible_host: 192.168.1.21
+          ansible_user: k8sadmin
