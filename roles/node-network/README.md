@@ -1,38 +1,44 @@
-Role Name
-=========
+# node-network
 
-A brief description of the role goes here.
+The `node-network` role focuses strictly on preparing the underlying OS networking environment. Because Kubernetes relies heavily on complex container networking configurations (CNI plugins like Calico or Flannel), the host kernels need to have specific routing capabilities and modules loaded beforehand.
 
-Requirements
-------------
+This role reliably handles:
+- **Kernel Modules**: Loads persistent base modules (`overlay`, `br_netfilter`) necessary to virtualize networks across physical interfaces.
+- **Sysctl Adjustments**: Applies routing metrics persistently (`net.ipv4.ip_forward`, `net.bridge.bridge-nf-call-*`) allowing traffic to be bridged into the container namespace successfully.
+- **Optional IPVS Readiness**: If IPVS proxying is enabled, it ensures all `ip_vs` kernel structures are mounted and installs the administrative package (`ipvsadm`).
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## How to Use
 
-Role Variables
---------------
+Integrate this tightly with your deployment after system packages and storage configurations have executed:
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```yaml
+- name: Prepare Host Networking
+  hosts: all
+  roles:
+    - role: node-network
+      tags: [ network ]
+```
 
-Dependencies
-------------
+## Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+This role provides highly customizable dictionaries allowing you to inject arbitrary tuning parameters if your specific network fabric requires it.
 
-Example Playbook
-----------------
+### User-Defined Variables (`defaults/main.yml`)
+Use these fields to toggle proxy methods or supply advanced overlay routing parameters.
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+| Variable                      | Default | Description                                                                                             |
+|-------------------------------|---------|---------------------------------------------------------------------------------------------------------|
+| `ipvs_enabled`                | `false` | If toggled `true`, installs the `ipvsadm` package and mounts IP Virtual Server (`ip_vs_*`) kernel modules. |
+| `additional_kernel_modules`   | `[]`    | A custom list where you can specify strings of extra kernel modules matching your host OS.              |
+| `additional_sysctl_configs`   | `{}`    | A custom key-value dictionary for any distinct sysctl configuration variables required by your cluster. |
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+### Role Internal Variables (`vars/`)
+These variables maintain the baseline stability. You should only override them if your OS behaves extraordinarily differently than the standard Linux kernel defaults.
 
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+| Variable                        | Origin               | Description                                                                              |
+|---------------------------------|----------------------|------------------------------------------------------------------------------------------|
+| `sysctl_configs`                | `vars/common.yml`    | The hardcoded dictionary that sets IP forwarding and bridge netfilter properties to `"1"`.|
+| `base_kernel_modules`           | `vars/common.yml`    | Essential list mapping to `overlay` and `br_netfilter`.                                 |
+| `ipvs_kernel_modules`           | `vars/common.yml`    | IPVS modules mapping to `ip_vs`, `ip_vs_rr`, `ip_vs_wrr`, `ip_vs_sh`, `nf_conntrack`.    |
+| `ipvs_pkg_name`                 | `vars/common.yml`    | Defaults to `"ipvsadm"`.                                                                |
+| `kernel_modules_extra_pkg_name` | `vars/RedHat.yml`    | (RedHat specific) Name of the extended kernel package required for loading modules.     |
