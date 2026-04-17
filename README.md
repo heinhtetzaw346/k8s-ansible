@@ -24,8 +24,8 @@ The collection is broken down into structured, modular roles, running sequential
 6. **[k8s-init](./roles/k8s-init/README.md)**  
    *Initializes the cluster.* Configures VIP load balancing (Keepalived) for HA deployments, executes `kubeadm init` on the primary control plane, manages tokens, and coordinates the joining process for all remaining control plane and worker nodes.
 
-   > [!NOTE]
-   > Control plane high availability is automatically configured based on your inventory—if more than one control plane node is defined, the HA setup runs; if only one is defined, it is safely skipped.
+> [!NOTE]
+> Control plane high availability is automatically configured based on your inventory—if more than one control plane node is defined, the HA setup runs; if only one is defined, it is safely skipped.
 
 ## How to Use the Sample Files
 
@@ -35,8 +35,8 @@ This repository ships with sample configurations so you can quickly get started 
 This file defines groups of instances indicating what role each instance will play. 
 - You should place the machine IPs (or FQDNs) under `k8s_control_plane` for nodes intended to run control plane components (API Server, ETCD).
   
-  > [!NOTE]
-  > **HA Auto-Detection**: The collection automatically sets up High Availability (HA) if you place more than one node in this group. If only one node is defined, the HA setup is skipped.
+> [!NOTE]
+> **HA Auto-Detection**: The collection automatically sets up High Availability (HA) if you place more than one node in this group. If only one node is defined, the HA setup is skipped.
 
 - You should place your worker machine IPs under `k8s_workers` meant to run your application pods. 
 
@@ -94,9 +94,9 @@ When expanding or managing an existing cluster, you rarely want to run tasks aga
 
 This is especially useful when:
 - **Adding new worker nodes**: Ensure the playbook only processes the newly defined workers rather than touching existing components. 
-  `ansible-playbook -i sample-inventory.yml sample-playbook.yml --limit new-worker-node`
+  `ansible-playbook -i sample-inventory.yml sample-playbook.yml -K --limit new-worker-node`
 - **Adding new control plane nodes**: Target a new control plane member exclusively to join an existing HA cluster.
-  `ansible-playbook -i sample-inventory.yml sample-playbook.yml --limit new-cp-node`
+  `ansible-playbook -i sample-inventory.yml sample-playbook.yml -K --limit new-cp-node`
 - **Patching a single host**: If one node failed a preflight check, you can run isolated tagging workflows securely against only that node.
 
 ## Quick Start
