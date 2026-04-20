@@ -3,7 +3,7 @@
   block:
     - name: Add script to enable share mounts
       ansible.builtin.template:
-        src: mount-shared.start
+        src: mount-shared.start.j2
         dest: /etc/local.d/mount-shared.start
         owner: root
         group: root
