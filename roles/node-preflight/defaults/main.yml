@@ -10,5 +10,5 @@ dns_servers:
   - "9.9.9.9"
 search_domain: "local"
 security_enabled: false
-firewall_enabled: true
+firewall_enabled: false
 swap_enabled: false

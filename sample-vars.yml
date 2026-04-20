@@ -28,7 +28,7 @@ search_domain: "local"
 security_enabled: false
 
 # Whether to configure OS level firewalls (firewalld, UFW)
-firewall_enabled: true
+firewall_enabled: false
 
 # [ADVANCED] Whether to keep swap enabled. Kubernetes typically expects swap to be disabled.
 # Only change this if deploying specific features that natively support swap.
@@ -73,6 +73,7 @@ kubernetes_version: "1.34"
 
 # Optional: Container image registry mirror to pull k8s components from.
 # Useful for environments with rate limits or restricted internet access.
+# Example mirror: registry.aliyuncs.com/google_containers
 kubernetes_registry_mirror: "registry.k8s.io"
 
 
