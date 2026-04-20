@@ -29,7 +29,7 @@
 
 - name: Include control-plane ha tasks
   when: 
-    - not ( groups['k8s_control_plane'] | length == 1 )
+    - groups['k8s_control_plane'] | length > 1
     - inventory_hostname in groups['k8s_control_plane']
     - not kubernetes_joined
   ansible.builtin.import_tasks: control-plane-ha.yml
