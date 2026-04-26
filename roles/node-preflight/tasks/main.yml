@@ -18,6 +18,7 @@
   become: true
   ansible.builtin.package:
     update_cache: true
+  tags: [ node-preflight, update-cache ]
 
 - name: Include dns
   ansible.builtin.import_tasks: "dns.yml"
