@@ -5,3 +5,6 @@ kubernetes_components:
   - cri-tools
 containerd_config_path: "/etc/containerd/config.toml"
 crio_config_path: "/etc/crio/crio.conf.d/00-crio.conf"
+cni_plugin_paths:
+  - "/opt/cni/bin/"
+cni_path: "/etc/cni/net.d/"

@@ -2,3 +2,7 @@ unqualified-search-registries = ["docker.io"]
 
 [crio.image]
 pause_image = "{{ kubernetes_registry_mirror }}/pause:{{ pause_image_version }}"
+
+[crio.network]
+network_dir = "{{ cni_path }}"
+plugin_dirs = {{ cni_plugin_paths | to_json }}
