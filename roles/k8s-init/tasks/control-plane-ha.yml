@@ -1,5 +1,6 @@
 - name: Setup control plane HA
   become: true
+  tags: [ k8s-init, control-plane-ha]
   block:
     - name: Install Software Load Balancers
       ansible.builtin.package:

@@ -32,8 +32,8 @@
     - groups['k8s_control_plane'] | length > 1
     - inventory_hostname in groups['k8s_control_plane']
     - not kubernetes_joined
-  ansible.builtin.import_tasks: control-plane-ha.yml
-  tags: [ k8s-init, control-plane-ha]
+  ansible.builtin.include_tasks: control-plane-ha.yml
+  tags: [ always ]
 
 - name: Pull images before init or join on control_plane
   become: true
