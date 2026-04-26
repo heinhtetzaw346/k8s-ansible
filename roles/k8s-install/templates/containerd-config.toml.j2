@@ -6,3 +6,7 @@ disabled_plugins = []
 [plugins."io.containerd.cri.v1.images"]
   [plugins."io.containerd.cri.v1.images".pinned_images]
     sandbox = "{{ kubernetes_registry_mirror }}/pause:{{ pause_image_version }}"
+
+[plugins."io.containerd.cri.v1.runtime".cni]
+  conf_dir = "{{ cni_path }}"
+  bin_dirs = {{ cni_plugin_paths | to_json }}
