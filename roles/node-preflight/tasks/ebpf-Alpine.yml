@@ -1,5 +1,6 @@
 - name: EBPF related tasks on Alpine
   become: true
+  tags: [ node-preflight, ebpf ]
   block:
     - name: Add script to enable share mounts
       ansible.builtin.template:

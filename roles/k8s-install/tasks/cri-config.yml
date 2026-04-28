@@ -1,5 +1,6 @@
 - name: Configure CRI
   become: true
+  tags: [ k8s-install, cri-config ]
   block:
     - name: Get pause image from kubeadm
       ansible.builtin.shell: |

@@ -1,5 +1,6 @@
 - name: Configure IPVS
   become: true
+  tags: [ node-network, ipvs ]
   block:
     - name: Load IPVS Kernel Modules persistently
       community.general.modprobe:
