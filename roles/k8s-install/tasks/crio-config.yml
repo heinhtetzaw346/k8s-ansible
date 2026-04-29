@@ -8,4 +8,11 @@
         owner: root
         group: root
         mode: "0644"
-      notify: "Restart CRI"
+    - name: Write crio registry config file
+      ansible.builtin.template:
+        src: crio-registry-conf.j2
+        dest: "{{ crio_registry_config_path }}"
+        owner: root
+        group: root
+        mode: "0644"
+  notify: "Restart CRI"
