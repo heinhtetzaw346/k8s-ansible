@@ -12,3 +12,21 @@
         regexp: '^([^#].*\bswap\b.*)$'
         replace: '# \1'
         backup: true
+
+- name: Mask systemd swap units
+  become: true
+  tags: [ node-preflight, swap ]
+  when: ansible_service_mgr == 'systemd'
+  block:
+    - name: Identify active swap units
+      ansible.builtin.shell: "systemctl list-units --type=swap --all --no-legend | awk '{print $1}'"
+      register: found_swap_units
+      changed_when: false
+
+    - name: Mask swap units to prevent auto-restart
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        masked: true
+        state: stopped
+      loop: "{{ found_swap_units.stdout_lines }}"
+      when: found_swap_units.stdout_lines | length > 0
