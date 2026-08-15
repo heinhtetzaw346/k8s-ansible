@@ -1,4 +1,5 @@
 *test*.yaml
+ansible.cfg
 *test*.yml
 *secret*
 *vault*
