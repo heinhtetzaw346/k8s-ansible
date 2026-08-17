@@ -22,7 +22,7 @@ The collection is broken down into structured, modular roles, running sequential
    *Installs Kubernetes packages.* Adds the official Kubernetes (or required mirror) repositories, and installs `kubelet`, `kubeadm`, and `kubectl` at the specified versions.
 
 6. **[k8s-init](./roles/k8s-init/README.md)**  
-   *Initializes the cluster.* Configures VIP load balancing (Keepalived) for HA deployments, executes `kubeadm init` on the primary control plane, manages tokens, and coordinates the joining process for all remaining control plane and worker nodes.
+   *Initializes the cluster.* Configures VIP load balancing (Keepalived) for HA deployments, executes `kubeadm init` on the primary control plane, fetches the cluster admin kubeconfig locally (`kubernetes_admin.yaml`), manages tokens, and coordinates the joining process for all remaining control plane and worker nodes.
 
 > [!NOTE]
 > Control plane high availability is automatically configured based on your inventory—if more than one control plane node is defined, the HA setup runs; if only one is defined, it is safely skipped.
@@ -106,4 +106,9 @@ This is especially useful when:
 3. Validate connection and deployment via the main playbook:
    ```bash
    ansible-playbook -i sample-inventory.yml sample-playbook.yml -K
+   ```
+4. Access your newly initialized cluster using the fetched admin kubeconfig:
+   ```bash
+   export KUBECONFIG=./kubernetes_admin.yaml
+   kubectl get nodes
    ```

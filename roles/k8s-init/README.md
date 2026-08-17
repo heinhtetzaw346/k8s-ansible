@@ -7,6 +7,7 @@ The logic operates conditionally to:
 - Automate **High Availability Control Planes**: If `k8s_control_plane` has more than one node mapped to it, the role automatically deploys Keepalived configs with a Virtual IP (`control_plane_lb_vip`) to balance requests perfectly!
 - Pre-pull required Kubernetes images using `kubeadm config images pull` through your chosen registry structure.
 - Generate valid `kubeadm init` commands containing all dynamic routing variables (Pod CIDR, Service CIDR, DNS domains) to construct the primary genesis node.
+- Automatically fetch `/etc/kubernetes/admin.conf` from the primary control plane node to `./kubernetes_admin.yaml` on the Ansible control machine.
 - Abstract and regenerate tokens securely to join all downstream Control Plane peers and Worker Nodes simultaneously.
 
 ## Architecture Details
@@ -17,6 +18,9 @@ For environments requiring robust uptime, orchestrating multiple control plane n
 
 ### Declarative Kubeadm Initialization
 Rather than relying on convoluted command-line arguments that are difficult to track and maintain (e.g. `kubeadm init --pod-network-cidr=...`), this role dynamically generates a structured `kubeadm-config.yml` file. This declarative file governs the standard `InitConfiguration` and `ClusterConfiguration` properties flawlessly prior to execution, ensuring the deployment is stable, easily reviewable, and significantly easier to upgrade in the future.
+
+### Admin Kubeconfig Retrieval
+Upon successful cluster initialization on the primary control plane node, the role automatically fetches the generated `/etc/kubernetes/admin.conf` configuration file and saves it locally on the Ansible controller machine as `./kubernetes_admin.yaml`. This enables immediate administration of the cluster using `kubectl` without manually SSH-ing into the control plane host.
 
 ## How to Use
 
