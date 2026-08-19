@@ -6,4 +6,8 @@
   become: true
   block:
     - name: Run join command on secondary control plane nodes
-      ansible.builtin.command: "{{ hostvars[groups['k8s_control_plane'][0]]['join_cmd'] + ' --control-plane --certificate-key ' + hostvars[groups['k8s_control_plane'][0]]['cert_key'] }}"
+      ansible.builtin.command: >-
+        {{ hostvars[groups['k8s_control_plane'][0]]['join_cmd'] + ' --control-plane --certificate-key ' + hostvars[groups['k8s_control_plane'][0]]['cert_key'] }}
+        {% if ignore_preflight_errors is defined and (ignore_preflight_errors | length > 0) %}
+        --ignore-preflight-errors={{ ignore_preflight_errors | join(',') }}
+        {% endif %}

@@ -47,6 +47,8 @@ This file defines groups of instances indicating what role each instance will pl
 This file acts as a centralized directory for every single toggle and configuration option. It overrides all defaults globally using `vars_files` inside your playbook.
 - Explore the document and ensure environmental expectations such as NTP, DNS servers, interface configurations, and container runtime versions are accurate.
 - Adjust `control_plane_lb_vip` to dictate the virtual IP your loadbalancers should assign!
+- Set `enable_stacked_ha: true/false` to toggle Keepalived + HAProxy deployment.
+- Configure `ignore_preflight_errors: ["Mem", "NumCPU"]` to bypass non-fatal preflight checks during resource-constrained test runs.
 
 ### 3. `sample-playbook.yml`
 This is your primary entrypoint payload. It ties the inventory target (`hosts: all`), the global variables target (`vars_files`), and the execution roadmap (`roles`) together.

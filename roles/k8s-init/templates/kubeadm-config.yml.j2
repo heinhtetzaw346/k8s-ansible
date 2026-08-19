@@ -3,7 +3,7 @@
 kind: InitConfiguration
 apiVersion: kubeadm.k8s.io/v1beta4
 nodeRegistration:
-criSocket: unix:///var/run/{{ container_runtime }}/{{ container_runtime }}.sock
+  criSocket: unix:///var/run/{{ container_runtime }}/{{ container_runtime }}.sock
 timeouts:
   controlPlaneComponentHealthCheck: 4m0s
   discovery: 5m0s

@@ -7,6 +7,8 @@ service_network_cidr: ""
 control_plane_endpoint: "{{ hostvars[groups['k8s_control_plane'][0]]['ansible_default_ipv4']['address'] | default ('') }}"
 cluster_dns_domain: ""
 ipvs_enabled: false
+enable_stacked_ha: true
+ignore_preflight_errors: []
 control_plane_lb_port: "443"
 control_plane_lb_vip: ""
 control_plane_lb_auth: "k8spass"

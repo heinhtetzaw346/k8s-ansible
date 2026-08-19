@@ -3,3 +3,4 @@ ansible.cfg
 *test*.yml
 *secret*
 *vault*
+kubernetes_admin.yaml

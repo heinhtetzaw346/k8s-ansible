@@ -76,6 +76,9 @@ kubernetes_version: "1.34"
 # Example mirror: registry.aliyuncs.com/google_containers
 kubernetes_registry_mirror: "registry.k8s.io"
 
+# [ADVANCED] List of preflight check errors to ignore during kubeadm init (e.g. ["Mem", "NumCPU"])
+ignore_preflight_errors: []
+
 
 # ==========================================
 # 4. Kubernetes Networking
@@ -94,6 +97,10 @@ cluster_dns_domain: ""
 # ==========================================
 # 5. Control Plane High Availability
 # ==========================================
+# Whether to deploy stacked Keepalived + HAProxy on control plane nodes for HA load balancing.
+# Defaults to true when k8s_control_plane has >1 node. Set to false if using an external load balancer.
+enable_stacked_ha: true
+
 # The endpoint (FQDN or IP) that worker nodes use to reach the API server.
 # For HA setups, this points to a load balancer. If left blank, it falls back
 # to the IP of the first control plane node.

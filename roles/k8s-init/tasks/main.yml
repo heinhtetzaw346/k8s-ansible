@@ -29,6 +29,7 @@
 
 - name: Include control-plane ha tasks
   when: 
+    - (enable_stacked_ha | default(true)) | bool
     - groups['k8s_control_plane'] | length > 1
     - inventory_hostname in groups['k8s_control_plane']
     - not kubernetes_joined

@@ -49,12 +49,14 @@ These flags dictate exactly how your subnets and cluster components are modeled.
 | `cluster_dns_domain`       | `""`              | Re-adjusts the internal core-dns domain (defaults to `cluster.local` inside Kubernetes if unspecified).                               |
 | `ipvs_enabled`             | `false`           | Activates proxy configurations utilizing `ipvs` strictly when executing `kubeadm`.                                                    |
 | `kubernetes_registry_mirror` | `"registry.k8s.io"`| Upstream location to fetch control-plane images during execution initialization.                                                      |
+| `ignore_preflight_errors`  | `[]`              | List of preflight check errors to ignore during `kubeadm init` and `join` execution (e.g. `["Mem", "NumCPU"]`).                       |
 
 **High Availability Parameters**
 These are only parsed if you configure multiple control planes in your `inventory`:
 
 | Variable                | Default      | Description                                                                                             |
 |-------------------------|--------------|---------------------------------------------------------------------------------------------------------|
+| `enable_stacked_ha`     | `true`       | Deploys stacked Keepalived + HAProxy on control plane nodes. Set to `false` if using an external load balancer. |
 | `control_plane_lb_vip`  | `""`         | The Virtual IP (VIP) to assign to the Keepalived router cluster handling the API server locally.        |
 | `control_plane_lb_port` | `"443"`      | Internal port forwarding proxy.                                                                         |
 | `control_plane_lb_auth` | `"k8spass"`  | Authorization secret utilized natively by the Keepalived instances to perform VRRP handshakes securely! |
